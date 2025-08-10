@@ -1,6 +1,15 @@
+.container {
+    display: flex;
+    flex-direction: column;
+
+    border: 1px solid black;
+    padding: 10px;
+}
+
 .board {
     display: flex;
     flex-direction: column;
+    flex-wrap: wrap;
     gap: 5px;
 }
 
@@ -19,4 +28,16 @@
 
     border: 1px solid black;
     text-transform: uppercase;
+}
+
+.correct {
+    background-color: lightgreen;
+}
+
+.close {
+    background-color: tan;
+}
+
+.incorrect {
+    background-color: grey;
 }
