@@ -110,7 +110,7 @@ function Wordle() {
                 {
                     isGameOver &&
                     <>
-                        <h3 style={{margin: `0 0`}}>The solution is {solution.toUpperCase()}</h3>
+                        <h3 style={{margin: `0 0`, display: `flex`, justifyContent: `center`}}>The word is {solution.toUpperCase()}</h3>
                         <button onClick={restartGame}>
                             Press enter to restart
                         </button>
@@ -157,7 +157,14 @@ function Wordle() {
 
                 {/*<p>Solution: {solution}</p>*/}
                 {/*<p>Press: {currentGuess}</p>*/}
-                <p style={{textAlign: `right`}}>build by Danny &hearts;</p>
+                <div style={{display: `flex`, justifyContent: `center`}}>
+                    <a href="https://github.com/DannyTheKO/react_wordle_project"
+                       target="_blank"
+                       className="creditButton"
+                    >
+                        Build by Danny &hearts;
+                    </a>
+                </div>
             </div>
         </div>
     )
