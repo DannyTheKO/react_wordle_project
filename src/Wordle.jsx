@@ -1,16 +1,20 @@
 import {useEffect, useState} from "react";
 import './wordle.css'
 
+/*
+    - React Coding Interview Ft. Clément Mihailescu(https://www.youtube.com/watch?v=5xf4_Kx7azg)
+ */
+
 const wordleApi = 'https://gist.githubusercontent.com/dracos/dd0668f281e685bad51479e5acaadb93/raw/6bfa15d263d6d5b63840a8e5b64e04b382fdb079/valid-wordle-words.txt'
 
 // Game Setting
 const LINE_LENGTH = 6; // This will create how many line of tried that user guess
-const TILE_LENGTH = 5; // This will be determined how many tile in that line
+const WORD_LENGTH = 5; // This will be determined how many word in that line
 
 function Wordle() {
     const [solution, setSolution] = useState('');
     const [guesses, setGuesses] = useState(Array(LINE_LENGTH).fill(null))
-    const [currentGuess, setCurrentGuess] = useState("");
+    const [currentGuess, setCurrentGuess] = useState('');
     const [isGameOver, setIsGameOver] = useState(false);
 
     useEffect(() => {
@@ -22,7 +26,7 @@ function Wordle() {
 
             // handle submit
             if (event.key === 'Enter') {
-                if (currentGuess.length !== TILE_LENGTH) {
+                if (currentGuess.length !== WORD_LENGTH) {
                     return;
                 }
                 const newGuesses = [...guesses];
@@ -44,11 +48,14 @@ function Wordle() {
             }
 
             // handle limit
-            if (currentGuess.length >= TILE_LENGTH) {
+            if (currentGuess.length >= WORD_LENGTH) {
                 return;
             }
 
-            setCurrentGuess(oldGuess => oldGuess + event.key)
+            const isLetter = event.key.match(/^[a-z]$/)
+            if (isLetter) {
+                setCurrentGuess(oldGuess => oldGuess + event.key)
+            }
         };
 
         window.addEventListener('keydown', handleType)
@@ -104,11 +111,11 @@ function Wordle() {
 function Line({guess, isFinal, solution}) {
     const tiles = [];
 
-    for (let i = 0; i < TILE_LENGTH; i++) {
+    for (let i = 0; i < WORD_LENGTH; i++) {
         const char = guess[i];
         let className = 'tile';
 
-        if(isFinal) {
+        if (isFinal) {
             if (char === solution[i]) {
                 className += ' correct'
             } else if (solution.includes(char)) {

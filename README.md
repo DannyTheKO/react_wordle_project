@@ -1,12 +1,11 @@
-# React + Vite
+# Wordle
+- A small minigame wordle project, written in React.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Credits To
+- The code was a replicated in the following video:
+  - [React Coding Interview Ft. Clément Mihailescu](https://www.youtube.com/watch?v=5xf4_Kx7azg).
+  - Author: [Conner Ardman](https://www.youtube.com/@ConnerArdman).
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- The list of wordle is from [dracos](https://gist.github.com/dracos)
+  - By using repository to replicate the fetching process from the interview video.
+  - His repository: [valid-wordle-words.txt](https://gist.github.com/dracos/dd0668f281e685bad51479e5acaadb93).
