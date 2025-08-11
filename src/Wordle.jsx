@@ -17,26 +17,57 @@ function Wordle() {
     const [currentGuess, setCurrentGuess] = useState('');
     const [isGameOver, setIsGameOver] = useState(false);
 
+    function restartGame() {
+        setCurrentGuess('')
+        setGuesses(Array(LINE_LENGTH).fill(null))
+        setIsGameOver(false)
+        randomWord()
+    }
+
+    // Fetch data
+    const randomWord = async () => {
+        const listWord = await fetch(wordleApi)
+        const wordArray = (await listWord.text()).split("\n")
+        const chosenWord = wordArray[Math.floor(Math.random() * wordArray.length)]
+        setSolution(chosenWord)
+    }
+
+    useEffect(() => {
+        randomWord();
+    }, []); // Run once
+
+    // Game logic
     useEffect(() => {
         const handleType = (event) => {
             // handle game state
-            if (isGameOver) {
+            if (event.key === 'Enter' && isGameOver) {
+                restartGame()
                 return;
             }
 
             // handle submit
             if (event.key === 'Enter') {
+                // if word doesn't fill up
                 if (currentGuess.length !== WORD_LENGTH) {
                     return;
                 }
+
                 const newGuesses = [...guesses];
-                console.log(newGuesses)
                 newGuesses[guesses.findIndex(val => val == null)] = currentGuess;
                 setGuesses(newGuesses);
                 setCurrentGuess('');
+                console.log(newGuesses)
 
+                // when is correct
                 const isCorrect = solution === currentGuess;
                 if (isCorrect) {
+                    setIsGameOver(true)
+                    return;
+                }
+
+                // when out of tries
+                // console.log(newGuesses.every(value => value !== null) === true)
+                if (newGuesses.every(value => value !== null)) {
                     setIsGameOver(true)
                 }
             }
@@ -52,6 +83,7 @@ function Wordle() {
                 return;
             }
 
+            // handle word input
             const isLetter = event.key.match(/^[a-z]$/)
             if (isLetter) {
                 setCurrentGuess(oldGuess => oldGuess + event.key)
@@ -62,47 +94,70 @@ function Wordle() {
 
         return () => window.removeEventListener('keydown', handleType)
 
-    }, [currentGuess, guesses, isGameOver, solution]);
-
-    useEffect(() => {
-        const randomWord = async () => {
-            const listWord = await fetch(wordleApi)
-            const wordArray = (await listWord.text()).split("\n")
-            const chosenWord = wordArray[Math.floor(Math.random() * wordArray.length)]
-            setSolution(chosenWord)
-        }
-
-        randomWord();
-    }, []);
+    }, [currentGuess, guesses, isGameOver, solution]); // Run everytime variable changed
 
     return (
-        <div className="container">
-            <div>
-                <p>Solution: {solution}</p>
-                <p>Press: {currentGuess}</p>
+        <div style={{
+            display: `flex`,
+            gap: `10px`,
+            flexWrap: `wrap`,
+            justifyContent: `center`,
+            alignItem: `center`,
+        }}
+        >
+            <div className="container">
+                <h1 style={{textAlign: `center`}}>Wordle</h1>
+                {
+                    isGameOver &&
+                    <>
+                        <h3 style={{margin: `0 0`}}>The solution is {solution.toUpperCase()}</h3>
+                        <button onClick={restartGame}>
+                            Press enter to restart
+                        </button>
+                    </>
+                }
+
+                <div className="board">
+                    {guesses.map((guess, index) => {
+                        /*
+                        * Check if this row is the "current guess" row:
+                        *
+                        * - This essentially find the first null value
+                        * in the null array using findIndex() method
+                        *
+                        * - If the current index matches that position,
+                        * this is where the player is typing
+                        * */
+                        const isCurrentGuess = index === guesses.findIndex(val => val == null);
+
+                        return (
+                            <Line key={index}
+                                  guess={isCurrentGuess ? currentGuess : guess ?? ''}
+                                  isFinal={!isCurrentGuess && guess != null}
+                                  solution={solution}
+                            />
+                        )
+                    })}
+                </div>
             </div>
 
-            <div className="board">
-                {guesses.map((guess, index) => {
-                    /*
-                    * Check if this row is the "current guess" row:
-                    *
-                    * - This essentially find the first null value
-                    * in the null array using findIndex() method
-                    *
-                    * - If the current index matches that position,
-                    * this is where the player is typing
-                    * */
-                    const isCurrentGuess = index === guesses.findIndex(val => val == null);
+            <div className="container">
+                <h1 style={{textAlign: `center`}}>Guide</h1>
+                <ul style={{paddingLeft: `24px`, marginTop: `0`}}>
+                    <li>Enter any five-letter word and press "Enter" to submit</li>
+                    <li>
+                        After each guess, Wordle will indicate the accuracy of your letters using color-coded tiles:
+                        <ul>
+                            <li>Green: The letter is correct and in the right spot.</li>
+                            <li>Yellow: The letter is in the word but in the wrong position.</li>
+                            <li>Gray: The letter is not in the word.</li>
+                        </ul>
+                    </li>
+                </ul>
 
-                    return (
-                        <Line key={index}
-                              guess={isCurrentGuess ? currentGuess : guess ?? ''}
-                              isFinal={!isCurrentGuess && guess != null}
-                              solution={solution}
-                        />
-                    )
-                })}
+                {/*<p>Solution: {solution}</p>*/}
+                {/*<p>Press: {currentGuess}</p>*/}
+                <p style={{textAlign: `right`}}>build by Danny &hearts;</p>
             </div>
         </div>
     )
